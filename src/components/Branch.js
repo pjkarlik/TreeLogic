@@ -1,15 +1,13 @@
-import Point from './Point';
-
 export default class Branch {
-  constructor(parent, level, x, y, canvas) {
+  constructor(parent, level, maxLevels, x, y, surface) {
     this.parent = parent;
+    this.surface = surface;
     this.branches = [];
-    this.canvas = canvas;
-    this.p0 = parent ? parent.p1 : new Point(x, y);
-    this.p1 = new Point(x, y);
+    this.p0 = parent ? parent.p1 : { x, y };
+    this.p1 = { x, y };
     this.level = level;
-    this.maxLevels = level;
-    this.life = 20;
+    this.maxLevels = maxLevels;
+    this.life = 10;
     this.angle = 0;
     this.vx = 0;
     this.vy = 0;
@@ -17,54 +15,47 @@ export default class Branch {
 
   grow = () => {
     for (let i = 0; i < this.branches.length; i++) {
-      const branch = this.branches[i];
-      if (branch.life < 0 && branch.length > 1) {
-        this.branches[i].splice(i, 1);
-      } else {
-        branch.grow();
-      }
+      this.branches[i].grow();
     }
 
     if (this.life > 1) {
       this.p1.x += this.vx;
       this.p1.y += this.vy;
-      this.canvas.beginPath();
-      this.canvas.lineCap = 'round';
-
+      this.surface.beginPath();
+      this.surface.lineCap = 'round';
+      const lineWidth = this.level * 6 - 5;
       if (this.level) {
-        this.canvas.lineWidth = this.level * 6 - 5;
-        this.canvas.strokeStyle = '#000';
+        this.surface.lineWidth = lineWidth;
+        this.surface.strokeStyle = '#000';
         if (this.parent) {
-          this.canvas.moveTo(this.parent.p0.x, this.parent.p0.y);
-          this.canvas.quadraticCurveTo(this.p0.x, this.p0.y, this.p1.x, this.p1.y);
+          this.surface.moveTo(this.parent.p0.x, this.parent.p0.y);
+          this.surface.quadraticCurveTo(this.p0.x, this.p0.y, this.p1.x, this.p1.y);
         }
-        this.canvas.stroke();
+        this.surface.stroke();
       } else {
-        this.canvas.lineWidth = 10;
-        this.canvas.strokeStyle = '#f40';
-        this.canvas.moveTo(this.p0.x, this.p0.y);
-        this.canvas.lineTo(this.p1.x, this.p1.y);
-        this.canvas.stroke();
+        this.surface.lineWidth = 4;
+        this.surface.strokeStyle = '#0f40ff';
+        this.surface.moveTo(this.p0.x, this.p0.y);
+        this.surface.lineTo(this.p1.x, this.p1.y);
+        this.surface.stroke();
       }
     }
-    // console.log(this.life);
-    // console.log(this.life, this.level);
     if (this.life === 1 && this.level > 0 && this.level < this.maxLevels) {
       this.branches.push(this.newBranch(this));
       this.branches.push(this.newBranch(this));
     }
-    this.life--;
+    this.life --;
   };
 
   newBranch = (parent) => {
-    const branch = new Branch(parent, parent.level - 1, parent.p1.x, parent.p1.y, this.canvas, this.newBranch);
+    const branch = new Branch(parent, parent.level - 1, this.maxLevels, parent.p1.x, parent.p1.y, this.surface);
     branch.angle = (parent.level === this.maxLevels) ? Math.random() * 2 * Math.PI : Math.atan2(
       parent.p1.y - parent.p0.y,
       parent.p1.x - parent.p0.x
     ) + (Math.random() * 1.4 - 0.7);
 
-    branch.vx = Math.cos(branch.angle) * 12;
-    branch.vy = Math.sin(branch.angle) * 12;
+    branch.vx = Math.cos(branch.angle) * 8;
+    branch.vy = Math.sin(branch.angle) * 8;
     branch.life = branch.level === 1 ? 8 : Math.round(Math.random() * (branch.level * 2)) + 2;
     return branch;
   };
