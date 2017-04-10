@@ -1,5 +1,5 @@
 export default class Branch {
-  constructor(parent, level, maxLevels, x, y, surface, hue) {
+  constructor(parent, level, maxLevels, x, y, surface) {
     this.parent = parent;
     this.surface = surface;
     this.branches = [];
@@ -7,11 +7,13 @@ export default class Branch {
     this.p1 = { x, y };
     this.level = level;
     this.maxLevels = maxLevels;
-    this.hue = hue || ~~(Math.random() * 360);
+    this.date = new Date();
+    this.hue = ~(this.date.getSeconds() * 10);
     this.life = 10;
     this.angle = 0;
     this.vx = 0;
     this.vy = 0;
+    this.mult = 7;
   }
 
   grow = () => {
@@ -27,7 +29,7 @@ export default class Branch {
       const lineWidth = this.level * 3 - 2;
       if (this.level) {
         this.surface.lineWidth = lineWidth;
-        this.surface.strokeStyle = 'rgba(20,5,0,0.5)';
+        this.surface.strokeStyle = 'rgba(40,25,0,0.5)';
         if (this.parent) {
           this.surface.moveTo(this.parent.p0.x, this.parent.p0.y);
           this.surface.quadraticCurveTo(this.p0.x, this.p0.y, this.p1.x, this.p1.y);
@@ -55,9 +57,9 @@ export default class Branch {
       parent.p1.x - parent.p0.x
     ) + (Math.random() * 1.4 - 0.7);
 
-    branch.vx = Math.cos(branch.angle) * 9;
-    branch.vy = Math.sin(branch.angle) * 9;
-    branch.life = branch.level === 1 ? 9 : Math.round(Math.random() * (branch.level * 2)) + 2;
+    branch.vx = Math.cos(branch.angle) * this.mult;
+    branch.vy = Math.sin(branch.angle) * this.mult;
+    branch.life = branch.level === 1 ? this.mult : Math.round(Math.random() * (branch.level * 2)) + 3;
     return branch;
   };
 }

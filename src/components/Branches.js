@@ -39,19 +39,17 @@ export default class Render {
   renderLoop = () => {
     this.frame++;
     const mouse = this.mouse.pointer();
-    const tempX = ((this.width / 2) - mouse.x) * 0.05;
-    const tempY = ((this.height / 2) - mouse.y) * 0.05;
+    const tempX = ((this.width / 2) - mouse.x) * 0.002;
+    const tempY = ((this.height / 2) - mouse.y) * 0.002;
     this.surface.drawImage(this.canvas, tempX, tempY);
-    if (this.frame % 2 === 0) {
-      this.surface.globalCompositeOperation = 'difference';
-      this.surface.fillStyle = 'rgba(255,255,255,0.01)';
+
+    if (this.frame % 5 === 0) {
+      this.surface.globalCompositeOperation = 'lighten';
+      this.surface.fillStyle = 'rgba(255,255,255,0.05)';
       this.surface.fillRect(0, 0, this.width, this.height);
       this.surface.globalCompositeOperation = 'source-over';
-      //
-      // this.surface.translate(this.width / 2, this.height / 2);
-      // this.surface.rotate(Math.PI / 180 * 180);
-      // this.surface.translate(-this.width / 2, -this.height / 2);
     }
+
     this.root.grow();
 
     if (Math.random() > 0.75) {
