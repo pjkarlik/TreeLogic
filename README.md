@@ -1,12 +1,12 @@
-# Glob - p5js/Tree
+# Grow / TreeLogic
 
-  Experimetns in p5js creating interactive tree visualizations and user interfaces.
+  Experiments in tree/branching visual generations. WIP - more to come....
 
 ## Change Log
-  * Initial Commit - p5js sketch framework.
+  * Initial Commit - basic render and canvas elements.
 
 ## Run the example
-  Requires Node v6.9.1 or greater
+  Requires Node v7.0.0 or greater
 
 ```bash
 $ npm install
