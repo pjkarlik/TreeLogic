@@ -36,11 +36,7 @@ export default class Branch {
         }
         this.surface.stroke();
       } else {
-        this.surface.lineWidth = 7;
-        this.surface.strokeStyle = `hsla(${this.hue},100%,50%,0.75)`;
-        this.surface.moveTo(this.p0.x, this.p0.y);
-        this.surface.lineTo(this.p1.x, this.p1.y);
-        this.surface.stroke();
+        this.sproutLeaves(this.p0, this.p1);
       }
     }
     if (this.life === 1 && this.level > 0 && this.level < this.maxLevels) {
@@ -49,6 +45,34 @@ export default class Branch {
     }
     this.life --;
   };
+
+  distance = (a, b, c, d) => {
+    const radius = Math.sqrt(((a - c) * (a - c) + (b - d) * (b - d)));
+    return radius;
+  };
+
+  getRandomPoint = (radius) => {
+    const angle = Math.random() * Math.PI * 2;
+    return {
+      x: Math.cos(angle) * radius,
+      y: Math.sin(angle) * radius,
+      angle,
+    };
+  };
+
+  sproutLeaves = (p0, p1) => {
+    this.surface.lineWidth = 3;
+    const amt = ~~(Math.random() * 3) + 2;
+    const radius = ~~(this.distance(p0.x, p0.y, p1.x, p1.y));
+    for (let i = 0; i < amt; i++) {
+      const hue = `hsla(${this.hue + (i * 20)},100%,50%,0.75)`;
+      const rndPoint = this.getRandomPoint(radius);
+      this.surface.fillStyle = hue;
+      this.surface.moveTo(p0.x + rndPoint.x + radius, this.parent.p0.y);
+      this.surface.arc(p0.x + rndPoint.x, p0.y + rndPoint.y, radius * 0.25, 0, 2 * Math.PI, false);
+      this.surface.fill();
+    }
+  }
 
   newBranch = (parent) => {
     const branch = new Branch(parent, parent.level - 1, this.maxLevels, parent.p1.x, parent.p1.y, this.surface);
