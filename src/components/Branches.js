@@ -1,5 +1,6 @@
 import Canvas from './Canvas';
 import Branch from './Branch';
+import Mouse from './Mouse';
 
 export default class Render {
   constructor(element, width, height) {
@@ -8,6 +9,7 @@ export default class Render {
     this.width = width || ~~(document.documentElement.clientWidth, window.innerWidth || 0);
     this.height = height || ~~(document.documentElement.clientHeight, window.innerHeight || 0);
     this.can = new Canvas(this.element);
+    this.mouse = new Mouse();
     this.renderCanvas = this.can.createCanvas('canvas');
     this.surface = this.renderCanvas.surface;
     this.canvas = this.renderCanvas.canvas;
@@ -36,16 +38,23 @@ export default class Render {
 
   renderLoop = () => {
     this.frame++;
+    const mouse = this.mouse.pointer();
+    const tempX = ((this.width / 2) - mouse.x) * 0.05;
+    const tempY = ((this.height / 2) - mouse.y) * 0.05;
+    this.surface.drawImage(this.canvas, tempX, tempY);
     if (this.frame % 2 === 0) {
-      this.surface.globalCompositeOperation = 'lighter';
+      this.surface.globalCompositeOperation = 'difference';
       this.surface.fillStyle = 'rgba(255,255,255,0.01)';
       this.surface.fillRect(0, 0, this.width, this.height);
       this.surface.globalCompositeOperation = 'source-over';
+      //
+      // this.surface.translate(this.width / 2, this.height / 2);
+      // this.surface.rotate(Math.PI / 180 * 180);
+      // this.surface.translate(-this.width / 2, -this.height / 2);
     }
-
     this.root.grow();
 
-    if (Math.random() > 0.85) {
+    if (Math.random() > 0.75) {
       const branch = new Branch(this.current, this.current.level, this.maxLevels,
         this.current.p1.x, this.current.p1.y, this.surface);
       this.current.branches.push(branch);

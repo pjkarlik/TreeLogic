@@ -1,5 +1,5 @@
 export default class Branch {
-  constructor(parent, level, maxLevels, x, y, surface) {
+  constructor(parent, level, maxLevels, x, y, surface, hue) {
     this.parent = parent;
     this.surface = surface;
     this.branches = [];
@@ -7,6 +7,7 @@ export default class Branch {
     this.p1 = { x, y };
     this.level = level;
     this.maxLevels = maxLevels;
+    this.hue = hue || ~~(Math.random() * 360);
     this.life = 10;
     this.angle = 0;
     this.vx = 0;
@@ -23,18 +24,18 @@ export default class Branch {
       this.p1.y += this.vy;
       this.surface.beginPath();
       this.surface.lineCap = 'round';
-      const lineWidth = this.level * 6 - 5;
+      const lineWidth = this.level * 3 - 2;
       if (this.level) {
         this.surface.lineWidth = lineWidth;
-        this.surface.strokeStyle = '#000';
+        this.surface.strokeStyle = 'rgba(20,5,0,0.5)';
         if (this.parent) {
           this.surface.moveTo(this.parent.p0.x, this.parent.p0.y);
           this.surface.quadraticCurveTo(this.p0.x, this.p0.y, this.p1.x, this.p1.y);
         }
         this.surface.stroke();
       } else {
-        this.surface.lineWidth = 4;
-        this.surface.strokeStyle = '#0f40ff';
+        this.surface.lineWidth = 7;
+        this.surface.strokeStyle = `hsla(${this.hue},100%,50%,0.75)`;
         this.surface.moveTo(this.p0.x, this.p0.y);
         this.surface.lineTo(this.p1.x, this.p1.y);
         this.surface.stroke();
@@ -54,9 +55,9 @@ export default class Branch {
       parent.p1.x - parent.p0.x
     ) + (Math.random() * 1.4 - 0.7);
 
-    branch.vx = Math.cos(branch.angle) * 8;
-    branch.vy = Math.sin(branch.angle) * 8;
-    branch.life = branch.level === 1 ? 8 : Math.round(Math.random() * (branch.level * 2)) + 2;
+    branch.vx = Math.cos(branch.angle) * 9;
+    branch.vy = Math.sin(branch.angle) * 9;
+    branch.life = branch.level === 1 ? 9 : Math.round(Math.random() * (branch.level * 2)) + 2;
     return branch;
   };
 }
