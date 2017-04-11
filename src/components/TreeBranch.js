@@ -13,7 +13,7 @@ export default class Branch {
     this.angle = 0;
     this.vx = 0;
     this.vy = 0;
-    this.mult = 7;
+    this.mult = 11;
   }
 
   grow = () => {
@@ -29,7 +29,7 @@ export default class Branch {
       const lineWidth = this.level * 3 - 2;
       if (this.level) {
         this.surface.lineWidth = lineWidth;
-        this.surface.strokeStyle = 'rgba(40,25,0,0.5)';
+        this.surface.strokeStyle = `hsla(${30 + (10 - (this.level * 5))},100%,10%,1)`;
         if (this.parent) {
           this.surface.moveTo(this.parent.p0.x, this.parent.p0.y);
           this.surface.quadraticCurveTo(this.p0.x, this.p0.y, this.p1.x, this.p1.y);
@@ -69,20 +69,21 @@ export default class Branch {
       const rndPoint = this.getRandomPoint(radius);
       this.surface.fillStyle = hue;
       this.surface.moveTo(p0.x + rndPoint.x + radius, this.parent.p0.y);
-      this.surface.arc(p0.x + rndPoint.x, p0.y + rndPoint.y, radius * 0.45, 0, 2 * Math.PI, false);
+      this.surface.arc(p0.x + rndPoint.x, p0.y + rndPoint.y, radius * 0.35, 0, 2 * Math.PI, false);
       this.surface.fill();
     }
   }
 
   newBranch = (parent) => {
     const branch = new Branch(parent, parent.level - 1, this.maxLevels, parent.p1.x, parent.p1.y, this.surface);
-    branch.angle = (parent.level === this.maxLevels) ? Math.random() * 2 * Math.PI : Math.atan2(
+    branch.angle = (parent.level === this.maxLevels) ? (-45.5) + (0.25 - Math.random() * 0.5) : Math.atan2(
       parent.p1.y - parent.p0.y,
       parent.p1.x - parent.p0.x
-    ) + (Math.random() * 1.4 - 0.7);
+    ) + (Math.random() * 1.0 - 0.5);
 
     branch.vx = Math.cos(branch.angle) * this.mult;
     branch.vy = Math.sin(branch.angle) * this.mult;
+
     branch.life = branch.level === 1 ? this.mult : Math.round(Math.random() * (branch.level * 2)) + 3;
     return branch;
   };
