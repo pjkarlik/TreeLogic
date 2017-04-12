@@ -1,5 +1,5 @@
 import Canvas from './Canvas';
-import Branch from './TreeBranch';
+import Branch from './AltBranch';
 import Mouse from './Mouse';
 
 export default class Render {
@@ -13,20 +13,19 @@ export default class Render {
     this.renderCanvas = this.can.createCanvas('canvas');
     this.surface = this.renderCanvas.surface;
     this.canvas = this.renderCanvas.canvas;
-    this.maxLevels = 8;
+    this.maxLevels = 7;
     this.nBranches = 0;
-    this.maxBranches = 200;
+    this.maxBranches = 150;
     this.frame = 0;
-    this.root = new Branch(false, this.maxLevels, this.maxLevels, this.xPosition(), this.height + 20, this.surface);
+    this.root = new Branch(false, this.maxLevels, this.maxLevels, this.width / 2, this.height / 2, this.surface);
     this.current = this.root;
+    this.click = false;
     window.addEventListener('resize', this.resetCanvas);
+    window.addEventListener('click', this.onClick);
     // run function //
     this.renderLoop();
   }
-  xPosition = () => {
-    const floorPos = Math.random() * this.width;
-    return floorPos;
-  };
+
   resetCanvas = () => {
     window.cancelAnimationFrame(this.animation);
     this.renderCanvas = this.can.setViewport(this.canvas);
@@ -39,39 +38,34 @@ export default class Render {
     this.renderLoop();
   };
 
+  onClick = (e) => {
+    e.preventDefault();
+    this.click = true;
+  }
+
   renderLoop = () => {
     this.frame++;
-    const mouse = this.mouse.pointer();
-    const tempX = 0.01 + ((this.width / 2) - mouse.x) * 0.002;
-    const tempY = (-0.1) + ((this.height / 2) - mouse.y) * 0.002;
-    this.surface.drawImage(this.canvas, tempX, tempY);
+    // const mouse = this.mouse.pointer();
+    const tempX = 0.359;
+    this.surface.drawImage(this.canvas, tempX, tempX,
+      this.canvas.width - (tempX * 2), this.canvas.height - (tempX * 2));
 
-    if (this.frame % 5 === 0) {
-      this.surface.globalCompositeOperation = 'difference';
-      this.surface.fillStyle = 'rgba(20,20,180,0.06)';
+    if (this.frame % 2 === 0) {
+      this.surface.globalCompositeOperation = 'multiply';
+      this.surface.fillStyle = 'rgba(0,0,0,0.02)';
       this.surface.fillRect(0, 0, this.width, this.height);
       this.surface.globalCompositeOperation = 'source-over';
     }
 
     this.root.grow();
 
-    if (Math.random() > 0.85) {
+    if (this.click) {
+      this.click = false;
       const branch = new Branch(this.current, this.current.level, this.maxLevels,
         this.current.p1.x, this.current.p1.y, this.surface);
       this.current.branches.push(branch);
 
-      if (Math.random() > 0.85) {
-        const newPositon = {
-          x: this.xPosition(),
-          y: this.height,
-        };
-        const newTrunk = {
-          ...this.current,
-          p1: { ...newPositon },
-          p0: { ...newPositon },
-        };
-        this.current.branches.push(this.current.newBranch(newTrunk));
-      }
+      this.current.branches.push(this.current.newBranch(this.current));
 
       this.current = branch;
       this.nBranches++;
@@ -81,6 +75,13 @@ export default class Render {
       this.root = this.root.branches[0];
       this.nBranches--;
     }
+    if (this.root.branches.length < 2 && this.root.life < 1) {
+      this.pause = false;
+    }
+    if (this.frame % 20 === 0 & this.frame < 40) {
+      console.log(this.root);
+    }
+
     this.animation = window.requestAnimationFrame(this.renderLoop);
   };
 }

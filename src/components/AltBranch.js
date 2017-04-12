@@ -68,7 +68,7 @@ export default class Branch {
       const lineWidth = this.level * 3 - 2;
       if (this.level) {
         this.surface.lineWidth = lineWidth;
-        this.surface.strokeStyle = 'rgba(40,25,0,0.5)';
+        this.surface.strokeStyle = 'rgba(150,0,0,0.5)';
         if (this.parent) {
           this.surface.moveTo(this.parent.p0.x, this.parent.p0.y);
           this.surface.quadraticCurveTo(this.p0.x, this.p0.y, this.p1.x, this.p1.y);

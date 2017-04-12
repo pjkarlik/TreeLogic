@@ -13,9 +13,9 @@ export default class Render {
     this.renderCanvas = this.can.createCanvas('canvas');
     this.surface = this.renderCanvas.surface;
     this.canvas = this.renderCanvas.canvas;
-    this.maxLevels = 8;
+    this.maxLevels = 7;
     this.nBranches = 0;
-    this.maxBranches = 200;
+    this.maxBranches = 150;
     this.frame = 0;
     this.root = new Branch(false, this.maxLevels, this.maxLevels, this.width / 2, this.height / 2, this.surface);
     this.current = this.root;
@@ -38,10 +38,11 @@ export default class Render {
 
   renderLoop = () => {
     this.frame++;
-    const mouse = this.mouse.pointer();
-    const tempX = ((this.width / 2) - mouse.x) * 0.002;
-    const tempY = ((this.height / 2) - mouse.y) * 0.002;
-    this.surface.drawImage(this.canvas, tempX, tempY);
+    // const mouse = this.mouse.pointer();
+    const tempX = 1.359;
+    // const tempY = ((this.height / 2) - mouse.y) * 0.002;
+    this.surface.drawImage(this.canvas, tempX, tempX,
+      this.canvas.width - (tempX * 2), this.canvas.height - (tempX * 2));
 
     if (this.frame % 5 === 0) {
       this.surface.globalCompositeOperation = 'lighten';
@@ -68,6 +69,9 @@ export default class Render {
     if (this.nBranches > this.maxBranches) {
       this.root = this.root.branches[0];
       this.nBranches--;
+    }
+    if (this.frame % 10 === 0 ) {
+      console.log(this.root);
     }
     this.animation = window.requestAnimationFrame(this.renderLoop);
   };
