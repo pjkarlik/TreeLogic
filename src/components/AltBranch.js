@@ -54,7 +54,7 @@ export default class Branch {
 
       const lineWidth = 0.5;
       const hue = `hsl(${this.hue},100%,50%)`;
-      const radius = ~~(this.distance(this.p0.x, this.p0.y, this.p1.x, this.p1.y));
+      // const radius = ~~(this.distance(this.p0.x, this.p0.y, this.p1.x, this.p1.y));
       const size = ~~((this.life * 0.2));
       this.surface.beginPath();
       if (this.level) {

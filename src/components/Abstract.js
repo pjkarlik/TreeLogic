@@ -50,8 +50,8 @@ export default class Render {
     this.surface.drawImage(this.canvas, tempX, tempX,
       this.canvas.width - (tempX * 2), this.canvas.height - (tempX * 2));
 
-    if (this.frame % 2 === 0) {
-      this.surface.globalCompositeOperation = 'lighten';
+    if (this.frame % 12 === 0) {
+      this.surface.globalCompositeOperation = 'darken';
       this.surface.fillStyle = 'rgba(0,0,0,0.5)';
       this.surface.fillRect(0, 0, this.width, this.height);
       this.surface.globalCompositeOperation = 'source-over';
@@ -78,7 +78,7 @@ export default class Render {
     if (this.root.branches.length < 2 && this.root.life < 1) {
       this.click = false;
     }
-    if (this.frame % 90 === 0) {
+    if (this.frame % 50 === 0) {
       this.click = true;
     }
     this.animation = window.requestAnimationFrame(this.renderLoop);
