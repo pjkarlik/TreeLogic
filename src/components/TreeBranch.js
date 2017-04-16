@@ -44,7 +44,8 @@ export default class Branch {
   }
 
   newBranch = (parent) => {
-    const branch = new Branch(parent, parent.level - 1, this.maxLevels, parent.p1.x, parent.p1.y, this.surface);
+    const branch = new Branch(parent,
+      parent.level - 1, this.maxLevels, parent.p1.x, parent.p1.y, this.surface);
     branch.angle = (parent.level === this.maxLevels) ? (-89.5) + ~~(0.25 - Math.random() * 0.5) : Math.atan2(
       parent.p1.y - parent.p0.y,
       parent.p1.x - parent.p0.x

@@ -1,4 +1,5 @@
 # Grow / TreeLogic
+![alt tag](resources/images/tree.png)
 
   Experiments in tree/branching visual generations. WIP - more to come....
 

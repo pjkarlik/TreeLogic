@@ -18,32 +18,28 @@ export default class Render {
     this.nBranches = 0;
     this.maxBranches = 200;
     this.frame = 0;
-    this.fade = 3;
+    this.fade = 0;
     this.shaderType = 'difference';
-    this.root = new Branch(false, this.maxLevels, this.maxLevels, this.xPosition(), this.height + 20, this.surface);
+    this.root = new Branch(false,
+      this.maxLevels, this.maxLevels, this.xPosition(), this.height + 20, this.surface);
     this.current = this.root;
     window.addEventListener('resize', this.resetCanvas);
     // run function //
     this.createGUI();
     this.renderLoop();
   }
-  setOptions = (options) => {
-    this.maxLevels = options.maxLevels || this.maxLevels;
-    this.fade = options.fade || this.fade;
-    this.shaderType = options.shaderType || this.shaderType;
-    this.root = new Branch(false, this.maxLevels, this.maxLevels, this.xPosition(), this.height + 20, this.surface);
-    this.current = this.root;
-  };
+
   createGUI = () => {
     this.options = {
       maxLevels: 7,
       fade: 4,
+      angle: 5,
       shaderType: 'screen',
     };
     this.gui = new dat.GUI();
     const folderRender = this.gui.addFolder('Render Options');
 
-    folderRender.add(this.options, 'maxLevels', 3, 11).step(1)
+    folderRender.add(this.options, 'maxLevels', 3, 9).step(1)
       .onFinishChange((value) => {
         this.options.maxLevels = value;
         this.setOptions(this.options);
@@ -63,10 +59,21 @@ export default class Render {
 
     this.setOptions(this.options);
   };
-  xPosition = () => {
-    const floorPos = Math.random() * this.width;
-    return floorPos;
+  setOptions = (options) => {
+    this.maxLevels = options.maxLevels || this.maxLevels;
+    this.fade = options.fade || this.fade;
+    this.shaderType = options.shaderType || this.shaderType;
+    this.resetBranches();
   };
+  resetBranches = () => {
+    window.cancelAnimationFrame(this.animation);
+    this.root = this.current = undefined;
+    this.nBranches = 0;
+    this.frame = 0;
+    this.current = this.root = new Branch(false,
+      this.maxLevels, this.maxLevels, this.xPosition(), this.height + 20, this.surface);
+    this.renderLoop();
+  }
   resetCanvas = () => {
     window.cancelAnimationFrame(this.animation);
     this.renderCanvas = this.can.setViewport(this.canvas);
@@ -74,11 +81,13 @@ export default class Render {
     this.canvas = this.renderCanvas.canvas;
     this.width = this.renderCanvas.width;
     this.height = this.renderCanvas.height;
-    this.root = this.root.branches[0];
-    this.nBranches--;
+    this.resetBranches();
     this.renderLoop();
   };
-
+  xPosition = () => {
+    const floorPos = Math.random() * this.width;
+    return floorPos;
+  };
   renderLoop = () => {
     this.frame++;
     const mouse = this.mouse.pointer();
@@ -88,7 +97,7 @@ export default class Render {
 
     if (this.frame % this.fade === 0) {
       this.surface.globalCompositeOperation = this.shaderType;
-      this.surface.fillStyle = 'rgba(20,20,180,0.06)';
+      this.surface.fillStyle = 'rgba(20,20,180,0.01)';
       this.surface.fillRect(0, 0, this.width, this.height);
       this.surface.globalCompositeOperation = 'source-over';
     }
