@@ -1,4 +1,4 @@
-import Render from './components/Forrest';
+import Render from './components/Branches';
 import { description, version } from '../version.json';
 require('../resources/styles/styles.css');
 
