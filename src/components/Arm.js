@@ -34,11 +34,11 @@ export default class Branch {
     this.surface.lineWidth = 3;
     const radius = ~~(this.distance(p0.x, p0.y, p1.x, p1.y));
     for (let i = 0; i < amt; i++) {
-      const hue = `hsla(${this.hue + (i * 20)},100%,50%,0.75)`;
+      const hue = `hsla(${this.hue + (i * 20)},100%,50%,0.5)`;
       const rndPoint = this.getRandomPoint(radius);
       this.surface.fillStyle = hue;
       this.surface.moveTo(p0.x + rndPoint.x + radius, this.parent.p0.y);
-      this.surface.arc(p0.x + rndPoint.x, p0.y + rndPoint.y, radius * 0.45, 0, 2 * Math.PI, false);
+      this.surface.arc(p0.x + rndPoint.x, p0.y + rndPoint.y, radius * 0.35, 0, 2 * Math.PI, false);
       this.surface.fill();
     }
   }
@@ -68,14 +68,13 @@ export default class Branch {
       const lineWidth = this.level * 3 - 2;
       if (this.level) {
         this.surface.lineWidth = lineWidth;
-        this.surface.strokeStyle = 'rgba(40,25,0,0.5)';
+        const hue = `hsla(${0 + (this.level * 10)},100%,50%,0.5)`;
+        this.surface.strokeStyle = hue;
         if (this.parent) {
           this.surface.moveTo(this.parent.p0.x, this.parent.p0.y);
           this.surface.quadraticCurveTo(this.p0.x, this.p0.y, this.p1.x, this.p1.y);
         }
-        if (this.parent) {
-          this.surface.stroke();
-        }
+        this.surface.stroke();
       } else {
         const amt = ~~(Math.random() * 4) + 2;
         this.sproutLeaves(this.p0, this.p1, amt);
