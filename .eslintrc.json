@@ -9,7 +9,6 @@
   "ecmaFeatures": {
     "modules": true
   },
-  "extends": "airbnb",
   "rules": {
     "no-undef": 2,
     "no-tabs": 0,
