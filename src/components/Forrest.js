@@ -1,7 +1,7 @@
+import dat from 'dat-gui';
 import Canvas from './Canvas';
 import Branch from './TreeBranch';
 import Mouse from './Mouse';
-import dat from 'dat-gui';
 
 export default class Render {
   constructor(element, width, height) {
@@ -67,11 +67,13 @@ export default class Render {
   };
   resetBranches = () => {
     window.cancelAnimationFrame(this.animation);
-    this.root = this.current = undefined;
+    this.root = undefined;
+    this.current = undefined;
     this.nBranches = 0;
     this.frame = 0;
-    this.current = this.root = new Branch(false,
+    this.current = new Branch(false,
       this.maxLevels, this.maxLevels, this.xPosition(), this.height + 20, this.surface);
+    this.root = this.current;
     this.renderLoop();
   }
   resetCanvas = () => {

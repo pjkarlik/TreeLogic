@@ -8,12 +8,12 @@ export default class Branch {
     this.level = level;
     this.maxLevels = maxLevels;
     this.date = new Date();
-    this.hue = ~(this.date.getSeconds() * 10);
+    this.hue = ~(this.date.getSeconds() * 50);
     this.life = 13;
     this.angle = 0;
     this.vx = 0;
     this.vy = 0;
-    this.mult = 4;
+    this.mult = 5;
   }
 
   distance = (a, b, c, d) => {
@@ -53,9 +53,13 @@ export default class Branch {
       this.p1.y += this.vy;
 
       const lineWidth = 0.5;
-      const hue = `hsl(${this.hue},100%,50%)`;
-      // const radius = ~~(this.distance(this.p0.x, this.p0.y, this.p1.x, this.p1.y));
+
+      // const radius = ~~(this.distance(this.p0.x, this.p0.y, this.p1.x, this.p1.y) * 0.55);
       const size = ~~((this.life * 0.2));
+      const opacity = 1 - (size * 0.007);
+      const hue = `hsla(${this.hue},100%,50%,${opacity})`;
+
+
       this.surface.beginPath();
       if (this.level) {
         this.surface.lineWidth = lineWidth;

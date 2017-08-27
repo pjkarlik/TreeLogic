@@ -46,15 +46,15 @@ export default class Render {
   renderLoop = () => {
     this.frame++;
     // const mouse = this.mouse.pointer();
-    const tempX = 0.59;
+    const tempX = 2.59;
     this.surface.drawImage(this.canvas, tempX, tempX,
       this.canvas.width - (tempX * 2), this.canvas.height - (tempX * 2));
 
-    if (this.frame % 12 === 0) {
+    if (this.frame % 1 === 0) {
       this.surface.globalCompositeOperation = 'darken';
-      this.surface.fillStyle = 'rgba(0,0,0,0.5)';
+      this.surface.fillStyle = 'rgba(0,0,0,0.05)';
       this.surface.fillRect(0, 0, this.width, this.height);
-      this.surface.globalCompositeOperation = 'source-over';
+      this.surface.globalCompositeOperation = 'lighten';
     }
 
     this.root.grow();
